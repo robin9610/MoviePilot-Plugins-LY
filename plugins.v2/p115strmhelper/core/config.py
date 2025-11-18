@@ -3,7 +3,7 @@ from typing import Dict, Any, Optional, List, Union
 from pathlib import Path
 
 from orjson import loads, JSONDecodeError
-from pydantic import BaseModel, ValidationError, Field, root_validator
+from pydantic import BaseModel, ValidationError, Field, model_validator
 
 from app.log import logger
 from app.core.config import settings
@@ -59,7 +59,7 @@ class ConfigManager(BaseModel):
         validate_assignment = True
         json_encoders = {Path: str}
 
-    @root_validator(allow_reuse=True)
+    @model_validator(mode='after')
     @classmethod
     def validate_cron_fields(cls, values: Dict[str, Any]) -> Dict[str, Any]:
         """
